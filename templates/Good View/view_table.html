@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Database</title>
+</head>
+
+<body>
+    <h1>View Database</h1>
+
+    <form id="view-form">
+        <label for="view_type">Select the view type:</label>
+        <select id="view_type" name="view_type" required>
+            <option value="finished_products">Finished Products</option>
+            <option value="raw_materials">Raw Materials</option>
+            <option value="packaging_materials">Packaging Materials</option>
+            <option value="all">All</option>
+        </select>
+        <br>
+        <br>
+
+        <input type="button" value="View" onclick="viewDatabase()">
+    </form>
+    <br>
+
+    <div id="results" style="display: none;">
+        <!-- Database query results will be shown here -->
+    </div>
+
+    <br>
+    <a href="/">Back to Home</a>
+
+    <script>
+        function viewDatabase() {
+            const form = document.getElementById("view-form");
+            const formData = new FormData(form);
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", "/submit_view_form");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        // Show the results div and display the query results
+                        const resultsDiv = document.getElementById("results");
+                        resultsDiv.innerHTML = xhr.responseText;
+                        resultsDiv.style.display = "block";
+                    } else {
+                        alert("Failed to view the database. Please try again.");
+                    }
+                }
+            };
+
+            // Convert form data to JSON before sending
+            const data = {};
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.send(JSON.stringify(data));
+        }
+    </script>
+</body>
+
+</html>

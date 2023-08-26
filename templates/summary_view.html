@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Summary View</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        h2 {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 95%;
+            margin: 10px auto; /* Center the table horizontally */
+            margin-top: 40px; /* Add some space on top */
+            margin-bottom: 40px; /* Add some space on top */
+        }
+
+        th, td {
+            border: 1px solid #000000;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        a {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        table.inner {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        table.inner th, table.inner td {
+            border: 1px solid #8f8f8f;
+            padding: 6px;
+            text-align: left;
+        }
+
+        button {
+            background-color: #030303;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #ff0000;
+        }
+
+    </style>
+</head>
+
+<body>
+    <h1>Summary View</h1>
+    <h2>List of Raw Materials</h2>
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Cost</th>
+            <th>Units</th>
+            <th>Quantity</th>
+            <th>Associated Product Codes</th>
+        </tr>
+        {% for rm in raw_materials %}
+        <tr>
+            <td>{{ rm.name }}</td>
+            <td>{{ rm.cost }}</td>
+            <td>{{ rm.units }}</td>
+            <td>{{ rm.quantity }}</td>
+            <td>{{ rm.code }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2>List of Packaging Materials</h2>
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Cost</th>
+            <th>Quantity</th>
+            <th>Associated Product Codes</th>
+        </tr>
+       
+        {% for pm in packaging_materials %}
+        <tr>
+            <td>{{ pm.name }}</td>
+            <td>{{ pm.cost }}</td>
+            <td>{{ pm.quantity }}</td>
+            <td>{{ pm.code }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2>List of Products</h2>
+    <table>
+        <tr>
+            <th>Code</th>
+            <th>Name</th>
+            <th>Cost</th>
+            <th>Units</th>
+            <th>Quantity</th>
+            <th>Price</th>
+        </tr>
+        
+        {% for product in products %}
+        <tr>
+            <td>{{ product.code }}</td>
+            <td>{{ product.name }}</td>
+            <td>{{ product.cost }}</td>
+            <td>{{ product.unit }}</td>
+            <td>{{ product.quantity }}</td>
+            <td>{{ product.price }}</td>
+        </tr>
+        <!-- Inner table for raw materials associated with this product -->
+        <tr>
+            <td colspan="6">
+                <table class="inner">
+                    <h3>List of Raw Materials Associated.</h3>
+                    <tr>
+                        <th>Code</th>
+                        <th>Name</th>
+                        <th>Cost</th>
+                        <th>Units</th>
+                        <th>Quantity</th>
+                    </tr>
+                   
+                    {% for rm in product.rawMaterials %}
+                    <tr>
+                        <td>{{ rm.code }}</td>
+                        <td>{{ rm.name }}</td>
+                        <td>{{ rm.cost }}</td>
+                        <td>{{ rm.units }}</td>
+                        <td>{{ rm.quantity }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </td>
+        </tr>
+        <!-- Inner table for packaging materials associated with this product -->
+        <tr>
+            <td colspan="6">
+                <table class="inner">
+                    <h3>List of Packaging Materials Associated.</h3>
+                    <tr>
+                        <th>Code</th>
+                        <th>Name</th>
+                        <th>Cost</th>
+                        <th>Quantity</th>
+                    </tr>
+                    
+                    {% for pm in product.packagingMaterials %}
+                    
+                    <tr>
+                        <td>{{ pm.code }}</td>
+                        <td>{{ pm.name }}</td>
+                        <td>{{ pm.cost }}</td>
+                        <td>{{ pm.quantity }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </td>
+        </tr>
+        <!-- Add a space between finished products -->
+        <tr style="height: 20px;"></tr> <!-- Adjust the height as needed -->
+        {% endfor %}
+    </table>
+
+    <br>
+    <a href="/">Back to Home</a>
+    <br><br>
+
+</body>
+
+</html>

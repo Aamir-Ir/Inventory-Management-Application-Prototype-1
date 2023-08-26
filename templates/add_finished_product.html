@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Finished Product</title>
+    <style>
+        body {
+            font-family: Century, sans-serif;
+            background-color: #f1ebeb;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            text-align: center;
+            max-width: 600px;
+            margin: auto;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin: 0 0 20px;
+            margin-top: 100;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            width: 90%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        input[type="button"] {
+            background-color: #030303;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            margin-bottom: 30px;
+        }
+
+        input[type="button"]:hover {
+            background-color: #ff0000;
+        }
+
+        .error {
+            color: red;
+            margin-bottom: 10px;
+        }
+
+        .success {
+            color: green;
+            margin-top: 10px;
+            display: none;
+        }
+
+        a {
+            text-decoration: none;
+            color: #007bff;
+            margin-top: 20px;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+        <h1>Add Finished Product</h1>
+        <p><b>Enter The Fields Below Accurately To Ensure Intended Changes.<br>Read Error Messages (Will Appear In Red Below If Any) To Understand How To Perfect Input.</b></p>
+        <form id="add-finished-product-form">
+            <label for="code">Enter the code:</label>
+            <input type="text" id="code" name="code" required>
+            <div class="error" id="error-code"></div>
+
+            <label for="product_name">Enter the name:</label>
+            <input type="text" id="product_name" name="product_name" required>
+            <div class="error" id="error-product_name"></div>
+
+            <label for="cost">Enter the cost:</label>
+            <input type="number" id="cost" name="cost" step="0.01" required>
+            <div class="error" id="error-cost"></div>
+
+            <label for="unit">Enter the unit:</label>
+            <input type="text" id="unit" name="unit" required>
+            <div class="error" id="error-unit"></div>
+
+            <label for="quantity">Enter the quantity:</label>
+            <input type="number" id="quantity" name="quantity" required>
+            <div class="error" id="error-quantity"></div>
+
+            <label for="price">Enter the price:</label>
+            <input type="number" id="price" name="price" step="0.01" required>
+            <div class="error" id="error-price"></div>
+
+            <label for="associated_materials">Enter associated material names (comma-separated, leave blank if none):</label>
+            <input type="text" id="associated_materials" name="associated_materials">
+            
+            <br><br><br>
+            <input type="button" value="Submit" onclick="submitAddFinishedProductForm()">
+        </form>
+        
+        <div id="error-message" class="error" style="display: none;"></div>
+
+        <div id="success-message" class="success" style="display: none;">
+            Operation successful!
+        </div>
+
+        <br>
+        
+        <a href="/">Back to Home</a>
+    </div>
+
+    <script>
+        function submitAddFinishedProductForm() {
+        const form = document.getElementById("add-finished-product-form");
+        const formData = new FormData(form);
+
+        // Check if cost field is empty
+        const costVal = formData.get("cost");
+        if (costVal.trim() === "") {
+            const errorMessage = document.getElementById("error-message");
+            errorMessage.textContent = "Please enter a valid number for Cost.";
+            errorMessage.style.display = "block";
+            return; // Stop form submission
+        }
+
+        // Check if quantity field is empty
+        const quantityVal = formData.get("quantity");
+        if (quantityVal.trim() === "") {
+            const errorMessage = document.getElementById("error-message");
+            errorMessage.textContent = "Please enter a valid number for Quantity.";
+            errorMessage.style.display = "block";
+            return; // Stop form submission
+        }
+
+        // Check if price field is empty
+        const priceVal = formData.get("price");
+        if (priceVal.trim() === "") {
+            const errorMessage = document.getElementById("error-message");
+            errorMessage.textContent = "Please enter a valid number for Price.";
+            errorMessage.style.display = "block";
+            return; // Stop form submission
+        }
+
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "/submit_add_finished_product_form");
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    // Hide any previous error messages
+                    const errorMessage = document.getElementById("error-message");
+                    errorMessage.style.display = "none";
+
+                    // Hide the form and show the success message
+                    form.style.display = "none";
+                    const successMessage = document.getElementById("success-message");
+                    successMessage.style.display = "block";
+                } else if (xhr.status === 400) {
+                    // Show the error messages from the response
+                    const errorMessage = document.getElementById("error-message");
+                    const response = JSON.parse(xhr.responseText);
+                    if (response.error) {
+                        errorMessage.textContent = response.error;
+                        errorMessage.style.display = "block";
+                    } else if (response.message) {
+                        errorMessage.textContent = response.message;  // Change "response.error" to "response.message"
+                        errorMessage.style.display = "block";
+                    }
+
+
+                    // Hide the success message if displayed
+                    const successMessage = document.getElementById("success-message");
+                    successMessage.style.display = "none";
+                } else {
+                    alert("Failed to perform the add finished product operation. Please try again.");
+                }
+            }
+        };
+
+        // Convert form data to JSON before sending
+        const data = {};
+        formData.forEach((value, key) => {
+            data[key] = value;
+        });
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.send(JSON.stringify(data));
+    }
+
+
+    </script>
+</body>
+
+</html>

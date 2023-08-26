@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Use</title>
+    <style>
+        /* Your CSS styles here */
+        body {
+            font-family: Century, sans-serif;
+            background-color: #f1ebeb;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            text-align: center;
+            max-width: 400px;
+            margin: auto;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 90%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+
+        input[type="button"] {
+            background-color: #030303;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        input[type="button"]:hover {
+            background-color: #ff0000;
+        }
+
+        #error-message,
+        #success-message {
+            margin-top: 15px;
+            display: none;
+        }
+
+        #error-message {
+            color: red;
+        }
+
+        #success-message {
+            color: green;
+        }
+
+        a {
+            text-decoration: none;
+            color: #007bff;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <br><br>
+        <h1>Use Function</h1>
+        <p><b>Enter The Fields Below Accurately To Ensure Intended Changes.<br><br>Read Error Messages (Will Appear In Red Below If Any) To Understand How To Perfect Input.</b></p>
+        <form id="use-form">
+            <label for="table_name">Select The Table Name:</label>
+            <select id="table_name" name="table_name" required>
+                <option value="RawMaterials">Raw Materials</option>
+                <option value="PackagingMaterials">Packaging Materials</option>
+                <option value="FinishedProduct">Finished Product</option>
+            </select>
+            <br>
+
+            <label for="name">Enter The Name (Code if Using A Finished Product):</label>
+            <input type="text" id="name" name="name" required>
+            <br>
+
+            <label for="quantity">Enter The Quantity:</label>
+            <input type="number" id="quantity" name="quantity" required>
+            <br>
+            <br>
+
+            <input type="button" value="Submit" onclick="submitUseForm()">
+        </form>
+
+        <div id="error-message"></div>
+        <div id="success-message">Operation Successful!</div>
+        <br>
+
+        <a href="/">Back to Home</a>
+    </div>
+
+    <script>
+        function submitUseForm() {
+            const form = document.getElementById("use-form");
+            const formData = new FormData(form);
+
+            // Check if quantity field is empty
+            const quanityVal = formData.get("quantity");
+            if (quanityVal.trim() === "") {
+                const errorMessage = document.getElementById("error-message");
+                errorMessage.textContent = "Please enter a valid number for Quantity.";
+                errorMessage.style.display = "block";
+                return; // Stop form submission
+            }
+            
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", "/submit_use_form");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        // Hide error message if displayed
+                        const errorMessage = document.getElementById("error-message");
+                        errorMessage.style.display = "none";
+
+                        // Hide the form and show the success message
+                        form.style.display = "none";
+                        const successMessage = document.getElementById("success-message");
+                        successMessage.style.display = "block";
+                    } else if (xhr.status === 400) {
+                        // Show the error message from the response
+                        const errorMessage = document.getElementById("error-message");
+                        const response = JSON.parse(xhr.responseText);
+                        errorMessage.innerHTML = response.error;
+                        errorMessage.style.display = "block";
+                    } else {
+                        alert("Failed to perform the use operation. Please try again.");
+                    }
+                }
+            };
+            
+            // Convert form data to JSON before sending
+            const data = {};
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.send(JSON.stringify(data));
+        }
+    </script>
+</body>
+
+</html>

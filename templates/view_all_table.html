@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- ... (head content) ... -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View All Tables</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        h2 {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 95%;
+            margin: 10px auto;
+            margin-top: 40px;
+            margin-bottom: 40px;
+        }
+
+        th, td {
+            border: 1px solid #000000;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        a {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        button {
+            background-color: #030303;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #ff0000;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>List Of All Tables</h1>
+    
+    <h2>List of Raw Materials</h2>
+    <table>
+        <thead>
+            <tr>
+                {% for column in raw_materials.columns %}
+                    <th>{{ column }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in raw_materials.data %}
+                <tr>
+                    {% for value in row %}
+                        <td>{{ value }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>List of Packaging Materials</h2>
+    <table>
+        <thead>
+            <tr>
+                {% for column in packaging_materials.columns %}
+                    <th>{{ column }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in packaging_materials.data %}
+                <tr>
+                    {% for value in row %}
+                        <td>{{ value }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>List of Finished Products</h2>
+    <table>
+        <thead>
+            <tr>
+                {% for column in finished_products.columns %}
+                    <th>{{ column }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in finished_products.data %}
+                <tr>
+                    {% for value in row %}
+                        <td>{{ value }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <br>
+    <a href="/">Back to Home</a>
+    <br><br>
+</body>
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Associations</title>
+    <style>
+        /* Your CSS styles here */
+        body {
+            font-family: Century, sans-serif;
+            background-color: #f1ebeb;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            text-align: center;
+            max-width: 600px;
+            margin: auto;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        select {
+            width: 90%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        input[type="button"] {
+            background-color: #030303;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        input[type="button"]:hover {
+            background-color: #ff0000;
+        }
+
+        a {
+            text-decoration: none;
+            color: #007bff;
+            margin-top: 20px;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Update Associations</h1>
+        <form id="update-associations-form">
+            <label for="update_type">Select An Update Type:</label>
+            <select id="update_type" name="update_type">
+                <option value="materials">Materials</option>
+                <option value="products">Products</option>
+            </select>
+            <br><br><br>
+            <input type="button" value="Update" onclick="updateAssociations()">
+        </form>
+        <br>
+        <div id="response-message" style="color: green;">
+            <!-- Response message will be displayed here -->
+        </div>
+        <br>
+        <a href="/">Back to Home</a>
+    </div>
+
+    <script>
+        function updateAssociations() {
+            const form = document.getElementById("update-associations-form");
+            const formData = new FormData(form);
+            const updateType = formData.get("update_type");  // Get the selected update type
+            const xhr = new XMLHttpRequest();
+
+            if (updateType === "materials") {
+                // Redirect to the update_material_association page
+                window.location.href = "/update_material_association";
+                return;
+            }
+
+            if (updateType === "products") {
+                // Redirect to the update_product_association page
+                window.location.href = "/update_product_association";
+                return;
+            }
+
+            xhr.open("POST", "/update_associations");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    const responseMessage = document.getElementById("response-message");
+                    if (xhr.status === 200) {
+                        responseMessage.style.color = "green";
+                    } else {
+                        responseMessage.style.color = "red";
+                    }
+                    responseMessage.textContent = xhr.responseText;
+                }
+            };
+
+            // Convert form data to URL-encoded format before sending
+            const data = new URLSearchParams(formData).toString();
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.send(data);
+        }
+    </script>
+</body>
+
+</html>
