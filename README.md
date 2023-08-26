@@ -27,6 +27,7 @@ You can install these dependencies using the following command:
 
 ```bash
 pip install Flask sqlite3 requests aspose-python reportlab Flask-Session
+```
 
 
 
