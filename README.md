@@ -27,7 +27,7 @@ You can install these dependencies using the following command:
 
 ```bash
 pip install Flask sqlite3 requests aspose-python reportlab Flask-Session
-
+'''
 
 ## 3. SQLite3 Table View<a name="sql-server-setup"></a>
 When you run the program make sure to have the extenstions allowing you to see all the changes you made to the database.
